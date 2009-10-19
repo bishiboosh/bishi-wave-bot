@@ -9,9 +9,16 @@ import com.google.wave.api.RobotMessageBundle;
 import com.google.wave.api.TextView;
 import com.google.wave.api.Wavelet;
 
+/** Global bot servlet
+ * @author bishiboosh
+ *
+ */
 @SuppressWarnings("serial")
 public class BotServlet extends AbstractRobotServlet {
 
+	/* (non-Javadoc)
+	 * @see com.google.wave.api.AbstractRobotServlet#processEvents(com.google.wave.api.RobotMessageBundle)
+	 */
 	@Override
 	public void processEvents(RobotMessageBundle bundle) {
 		Wavelet wavelet = bundle.getWavelet();
