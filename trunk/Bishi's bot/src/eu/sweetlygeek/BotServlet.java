@@ -35,13 +35,6 @@ public class BotServlet extends AbstractRobotServlet {
 			tv.append("Salut les moches !");
 		}
 		
-		if (bundle.wasSelfRemoved())
-		{
-			Blip blip = wavelet.appendBlip();
-			TextView tv = blip.getDocument();
-			tv.append("Kenavo les bouseux !");
-		}
-		
 		for (Event e : bundle.getBlipSubmittedEvents())
 		{
 			Blip b = e.getBlip();
