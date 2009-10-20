@@ -36,7 +36,7 @@ public class FlickrGetter extends BlipParser {
 
 	private FlickrGetter()
 	{
-		Flickr flickr = new Flickr(API_KEY);
+		flickr = new Flickr(API_KEY);
 		flickr.setSharedSecret(SECRET_KEY);
 	}
 
@@ -56,7 +56,7 @@ public class FlickrGetter extends BlipParser {
 			frob = ai.getFrob();
 			URL url = ai.buildAuthenticationUrl(Permission.READ, frob);
 			Blip blip = wavelet.appendBlip();
-			blip.getDocument().appendMarkup("Connectez-moi : <a href='" + url.toString() + "'>" + url.toString() + "</a>");
+			blip.getDocument().append("Connectez-moi : " + url.toString());
 		} catch (MalformedURLException e) {
 			LOGGER.error("Error while sending auth URL", e);
 		} catch (IOException e) {
@@ -66,6 +66,12 @@ public class FlickrGetter extends BlipParser {
 		} catch (FlickrException e) {
 			LOGGER.error("Error while sending auth URL", e);
 		}
+	}
+	
+	public void deauth()
+	{
+		frob = null;
+		authentified = false;
 	}
 
 	private void reAuth(Wavelet wavelet)
@@ -85,6 +91,11 @@ public class FlickrGetter extends BlipParser {
 				authentified = false;
 				auth(wavelet);
 			}
+		}
+		else
+		{
+			authentified = false;
+			auth(wavelet);
 		}
 	}
 
