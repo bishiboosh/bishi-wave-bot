@@ -37,6 +37,12 @@ public class BotServlet extends AbstractRobotServlet {
 			Blip blip = wavelet.appendBlip();
 			TextView tv = blip.getDocument();
 			tv.append("Salut les moches !");
+			FlickrGetter.getInstance().auth(wavelet);
+		}
+		
+		if (bundle.wasSelfRemoved())
+		{
+			FlickrGetter.getInstance().deauth();
 		}
 		
 		for (Event e : bundle.getBlipSubmittedEvents())
@@ -56,9 +62,7 @@ public class BotServlet extends AbstractRobotServlet {
 			}
 			else if (StringUtils.contains(text, FlickrGetter.FLICKR_TAG))
 			{
-				FlickrGetter fg = FlickrGetter.getInstance();
-				fg.auth(wavelet);
-				fg.analyzeBlip(blip, wavelet);
+				FlickrGetter.getInstance().analyzeBlip(blip, wavelet);
 			}
 		}
 	}
