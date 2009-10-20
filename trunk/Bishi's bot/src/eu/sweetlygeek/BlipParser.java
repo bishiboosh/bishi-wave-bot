@@ -7,8 +7,8 @@ import com.google.wave.api.Wavelet;
  * @author bishiboosh
  *
  */
-public interface BlipParser {
+public abstract class BlipParser {
 	
-	public void analyzeBlip(Blip blip, Wavelet currentWavelet);
+	public abstract void analyzeBlip(Blip blip, Wavelet currentWavelet);
 
 }
