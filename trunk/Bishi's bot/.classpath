@@ -12,5 +12,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-lang-2.4.jar" sourcepath="/home/bishiboosh/Documents/Logiciels/java/commons-lang-2.4-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xalan.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xerces.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

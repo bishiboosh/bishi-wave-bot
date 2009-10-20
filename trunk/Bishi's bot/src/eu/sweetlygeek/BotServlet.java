@@ -4,6 +4,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import com.google.wave.api.AbstractRobotServlet;
 import com.google.wave.api.Blip;
@@ -47,6 +48,8 @@ public class BotServlet extends AbstractRobotServlet {
 				try {
 					DropularGetter.getInstance().analyzeBlip(b, wavelet);
 				} catch (ParserConfigurationException ex) {
+					LOGGER.error("Error while analyzing blip", ex);
+				} catch (SAXException ex) {
 					LOGGER.error("Error while analyzing blip", ex);
 				}
 			}

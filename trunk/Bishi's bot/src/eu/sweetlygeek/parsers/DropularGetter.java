@@ -1,6 +1,10 @@
 package eu.sweetlygeek.parsers;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,16 +12,22 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.wave.api.Blip;
+import com.google.wave.api.Image;
 import com.google.wave.api.Wavelet;
+
+import eu.sweetlygeek.handlers.ImageUrlHandler;
 
 /** Dropular blip parser
  * @author bishiboosh
@@ -33,13 +43,16 @@ public class DropularGetter extends BlipParser {
 
 	private static DropularGetter instance;
 	private URLFetchService fetcher;
+	private SAXParser parser;
 
-	private DropularGetter() throws ParserConfigurationException
+	private DropularGetter() throws SAXException, ParserConfigurationException
 	{
 		this.fetcher = URLFetchServiceFactory.getURLFetchService();
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		this.parser = spf.newSAXParser();
 	}
 
-	public static DropularGetter getInstance() throws ParserConfigurationException
+	public static DropularGetter getInstance() throws ParserConfigurationException, SAXException
 	{
 		if (instance == null)
 		{
@@ -93,16 +106,33 @@ public class DropularGetter extends BlipParser {
 			LOGGER.error("Error while analyzing request", e);
 		} catch (IOException e) {
 			LOGGER.error("Error while analyzing request", e);
-		}
-		catch (ParserConfigurationException e) {
-			LOGGER.error("Error while analyzing request", e);
 		} catch (SAXException e) {
 			LOGGER.error("Error while analyzing request", e);
 		}
-		// TODO : autre que keyword
 	}
 
-	private void parseResponse(byte[] content, Wavelet wavelet) throws ParserConfigurationException, SAXException, IOException {
-		// TODO
+	private void parseResponse(byte[] content, Wavelet wavelet) throws SAXException, IOException {
+		StringBuffer xmlBuf = new StringBuffer();
+		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content)));
+		String line = br.readLine();
+		while (line != null)
+		{
+			xmlBuf.append(line);
+			line = br.readLine();
+		}
+		// On enlève les & qui trainent
+		String cleanXML = StringUtils.replace(xmlBuf.toString(), "&", "&amp;");
+		
+		ImageUrlHandler handler = new ImageUrlHandler();
+		InputSource is = new InputSource(new StringReader(cleanXML));
+		this.parser.parse(is, handler);
+		
+		Blip b = wavelet.appendBlip();
+		for (String url : handler.getUrls())
+		{
+			Image image = new Image();
+			image.setUrl(url);
+			b.getDocument().appendElement(image);
+		}
 	}
 }
