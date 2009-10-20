@@ -1,4 +1,4 @@
-package eu.sweetlygeek;
+package eu.sweetlygeek.parsers;
 
 import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;

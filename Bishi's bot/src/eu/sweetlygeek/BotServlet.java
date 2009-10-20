@@ -12,6 +12,8 @@ import com.google.wave.api.RobotMessageBundle;
 import com.google.wave.api.TextView;
 import com.google.wave.api.Wavelet;
 
+import eu.sweetlygeek.parsers.DropularGetter;
+
 /** Global bot servlet
  * @author bishiboosh
  *

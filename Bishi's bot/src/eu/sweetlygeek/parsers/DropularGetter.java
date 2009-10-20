@@ -1,4 +1,4 @@
-package eu.sweetlygeek;
+package eu.sweetlygeek.parsers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -24,6 +23,8 @@ import com.google.wave.api.Blip;
 import com.google.wave.api.Image;
 import com.google.wave.api.TextView;
 import com.google.wave.api.Wavelet;
+
+import eu.sweetlygeek.http.NoSSLHttpClient;
 
 /** Dropular blip parser
  * @author bishiboosh
@@ -43,7 +44,7 @@ public class DropularGetter extends BlipParser {
 
 	private DropularGetter() throws ParserConfigurationException
 	{
-		this.client = new DefaultHttpClient();
+		this.client = new NoSSLHttpClient();
 		this.reader = new SAXReader();
 	}
 
