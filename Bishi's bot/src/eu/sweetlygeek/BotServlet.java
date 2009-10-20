@@ -56,7 +56,9 @@ public class BotServlet extends AbstractRobotServlet {
 			}
 			else if (StringUtils.contains(text, FlickrGetter.FLICKR_TAG))
 			{
-				FlickrGetter.getInstance().analyzeBlip(blip, wavelet);
+				FlickrGetter fg = FlickrGetter.getInstance();
+				fg.auth(wavelet);
+				fg.analyzeBlip(blip, wavelet);
 			}
 		}
 	}
