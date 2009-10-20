@@ -7,9 +7,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,8 +22,6 @@ import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.wave.api.Blip;
-import com.google.wave.api.Image;
-import com.google.wave.api.TextView;
 import com.google.wave.api.Wavelet;
 
 import eu.sweetlygeek.handlers.ImageUrlHandler;
@@ -65,32 +60,10 @@ public class DropularGetter extends BlipParser {
 
 	@Override
 	public void analyzeBlip(Blip blip, Wavelet currentWavelet) {
-		String text = blip.getDocument().getText();
-		List<String> words = Arrays.asList(StringUtils.split(text));
-		List<String> requests = new ArrayList<String>();
-		boolean found = false;
-		for (String word : words)
-		{
-			if (StringUtils.contains(word, DROPULAR_TAG))
-			{
-				found = true;
-				requests.add(word);
-			}
-		}
-		if (!found)
-		{
-			return;
-		}
-		else
-		{
-			for (String request : requests)
-			{
-				analyzeRequest(request, currentWavelet);
-			}
-		}
+		analyzeBlip(blip, currentWavelet, DROPULAR_TAG);
 	}
 
-	private void analyzeRequest(String request, Wavelet currentWavelet)
+	protected void analyzeRequest(String request, Wavelet currentWavelet)
 	{
 		try {
 			String[] params = request.split(":");
@@ -135,17 +108,12 @@ public class DropularGetter extends BlipParser {
 		InputSource is = new InputSource(new StringReader(cleanXML));
 		this.parser.parse(is, handler);
 		
-		Blip b = wavelet.appendBlip();
-		TextView doc = b.getDocument();
+		Blip blip = wavelet.appendBlip();
 		Map<String, String> bigMap = handler.getBigMap();
 		Map<String, String> miniMap = handler.getMiniMap();
 		for (String dropId : bigMap.keySet())
 		{
-			Image image = new Image();
-			image.setUrl(miniMap.get(dropId));
-			doc.appendElement(image);
-			String bigUrl = bigMap.get(dropId);
-			doc.appendMarkup("<a href='" + bigUrl + "'>" + bigUrl + "</a>");
+			addImage(blip, miniMap.get(dropId), bigMap.get(dropId));
 		}
 	}
 }
