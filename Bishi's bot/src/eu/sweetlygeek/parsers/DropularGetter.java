@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -25,6 +26,7 @@ import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.wave.api.Blip;
 import com.google.wave.api.Image;
+import com.google.wave.api.TextView;
 import com.google.wave.api.Wavelet;
 
 import eu.sweetlygeek.handlers.ImageUrlHandler;
@@ -92,10 +94,16 @@ public class DropularGetter extends BlipParser {
 	{
 		try {
 			String[] params = request.split(":");
-			if (params.length == 2)
+			if (params.length >= 2)
 			{
 				// Par default : pool
-				URL url = new URL(DROPULAR_URL + "get_pool/" + params[1] + "/random/10.xml");
+				int results = 10;
+				try {
+					results = params.length >= 3 ? Integer.parseInt(params[2]) : results;
+				} catch (NumberFormatException e) {
+					// Nothing
+				}
+				URL url = new URL(DROPULAR_URL + "get_pool/" + params[1] + "/random/" + results + ".xml");
 				HTTPResponse res = this.fetcher.fetch(url);
 				if (res != null)
 				{
@@ -128,11 +136,16 @@ public class DropularGetter extends BlipParser {
 		this.parser.parse(is, handler);
 		
 		Blip b = wavelet.appendBlip();
-		for (String url : handler.getUrls())
+		TextView doc = b.getDocument();
+		Map<String, String> bigMap = handler.getBigMap();
+		Map<String, String> miniMap = handler.getMiniMap();
+		for (String dropId : bigMap.keySet())
 		{
 			Image image = new Image();
-			image.setUrl(url);
-			b.getDocument().appendElement(image);
+			image.setUrl(miniMap.get(dropId));
+			doc.appendElement(image);
+			String bigUrl = bigMap.get(dropId);
+			doc.appendMarkup("<a href='" + bigUrl + "'>" + bigUrl + "</a>");
 		}
 	}
 }
