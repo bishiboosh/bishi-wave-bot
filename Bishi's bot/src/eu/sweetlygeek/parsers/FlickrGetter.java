@@ -32,6 +32,7 @@ public class FlickrGetter extends BlipParser {
 	private Flickr flickr;
 
 	private String frob;
+	private boolean authentified;
 
 	private FlickrGetter()
 	{
@@ -75,11 +76,13 @@ public class FlickrGetter extends BlipParser {
 				AuthInterface ai = flickr.getAuthInterface();
 				Auth token = ai.getToken(frob);
 				flickr.setAuth(token);
+				authentified = true;
 			} catch (IOException e) {
 				LOGGER.error("Error while re-authentificating", e);
 			} catch (SAXException e) {
 				LOGGER.error("Error while re-authentificating", e);
 			} catch (FlickrException e) {
+				authentified = false;
 				auth(wavelet);
 			}
 		}
@@ -106,7 +109,10 @@ public class FlickrGetter extends BlipParser {
 				SearchParameters sp = new SearchParameters();
 				sp.setTags(new String[] {params[1]});
 				sp.setSort(SearchParameters.INTERESTINGNESS_DESC);
-				sp.setSafeSearch(Flickr.SAFETYLEVEL_RESTRICTED);
+				if (authentified)
+				{
+					sp.setSafeSearch(Flickr.SAFETYLEVEL_RESTRICTED);
+				}
 				PhotoList list = this.flickr.getPhotosInterface().search(sp, results, 0);
 				Blip blip = currentWavelet.appendBlip();
 				for (Object o : list)
