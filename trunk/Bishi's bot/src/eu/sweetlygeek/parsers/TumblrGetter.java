@@ -88,10 +88,15 @@ public class TumblrGetter extends BlipParser {
 			}
 			try {
 				URL url = getURLWithParams(paramMap);
-				HTTPResponse res= this.fetcher.fetch(url);
+				HTTPResponse res = this.fetcher.fetch(url);
+				// On cherche sur les 100 premiers donc on refait deux fois
+				// la requête
+				paramMap.put("start", "50");
+				URL url2 = getURLWithParams(paramMap);
+				HTTPResponse res2 = this.fetcher.fetch(url2);
 				if (res != null)
 				{
-					parseResponse(res.getContent(), results, currentWavelet);
+					parseResponse(res.getContent(), res2.getContent(), results, currentWavelet);
 				}
 			} catch (MalformedURLException e) {
 				LOGGER.error("Error while analyzing request", e);
@@ -103,14 +108,29 @@ public class TumblrGetter extends BlipParser {
 		}
 	}
 	
-	private void parseResponse(byte[] content, int results, Wavelet wavelet) throws IOException, JSONException {
+	private void parseResponse(byte[] content1, byte[] content2, int results, Wavelet wavelet) throws IOException, JSONException {
+		Map<String, String> bigMap = new HashMap<String, String>();
+		Map<String, String> miniMap = new HashMap<String, String>();
+		
+		parseContent(content1, bigMap, miniMap);
+		parseContent(content2, bigMap, miniMap);
+		
+		bigMap = Utils.pickAtRandom(bigMap, results);
+		miniMap = Utils.copyMapsFromKey(miniMap, bigMap.keySet());
+		
+		Blip blip = wavelet.appendBlip();
+		for (String key : bigMap.keySet())
+		{
+			addImage(blip, miniMap.get(key), bigMap.get(key));
+		}
+	}
+
+	private void parseContent(byte[] content, Map<String, String> bigMap,
+			Map<String, String> miniMap) throws IOException, JSONException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content)));
 		String result = br.readLine();
 		if (result != null)
 		{
-			Map<String, String> bigMap = new HashMap<String, String>();
-			Map<String, String> miniMap = new HashMap<String, String>();
-			
 			int d = result.indexOf('{');
 			int f = result.lastIndexOf('}') + 1;
 			String sJson = result.substring(d, f);
@@ -120,15 +140,6 @@ public class TumblrGetter extends BlipParser {
 			{
 				JSONObject post = posts.getJSONObject(i);
 				parsePost(post, bigMap, miniMap);
-			}
-			
-			bigMap = Utils.pickAtRandom(bigMap, results);
-			miniMap = Utils.copyMapsFromKey(miniMap, bigMap.keySet());
-			
-			Blip blip = wavelet.appendBlip();
-			for (String key : bigMap.keySet())
-			{
-				addImage(blip, miniMap.get(key), bigMap.get(key));
 			}
 		}
 	}
@@ -163,6 +174,10 @@ public class TumblrGetter extends BlipParser {
 	private URL getURLWithParams(Map<String, String> params) throws MalformedURLException
 	{
 		StringBuffer buf = new StringBuffer(TUMBLR_URL);
+		if (params.size() != 0)
+		{
+			buf.append('?');
+		}
 		try {
 			Iterator<Map.Entry<String, String>> eIt = params.entrySet().iterator();
 			while (eIt.hasNext())
