@@ -24,8 +24,8 @@ public abstract class BlipParser {
 		TextView doc = blip.getDocument();
 		Image image = new Image();
 		image.setUrl(littleUrl);
-		doc.appendElement(image);
-		doc.appendMarkup("<a href='" + bigUrl + "'>" + bigUrl + "</a>");
+//		String img = doc.appendElement(image);
+		doc.appendMarkup("<a href='" + bigUrl + "'><img src='" + littleUrl + "' /></a>");
 	}
 	
 	protected abstract void analyzeRequest(String request, Wavelet currentWavelet);

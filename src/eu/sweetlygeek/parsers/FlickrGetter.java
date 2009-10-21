@@ -1,46 +1,132 @@
 package eu.sweetlygeek.parsers;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import com.aetrion.flickr.Flickr;
 import com.aetrion.flickr.FlickrException;
+import com.aetrion.flickr.auth.Auth;
+import com.aetrion.flickr.auth.AuthInterface;
+import com.aetrion.flickr.auth.Permission;
 import com.aetrion.flickr.photos.Photo;
 import com.aetrion.flickr.photos.PhotoList;
-import com.aetrion.flickr.photos.PhotosInterface;
 import com.aetrion.flickr.photos.SearchParameters;
 import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;
 
 public class FlickrGetter extends BlipParser {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(FlickrGetter.class);
-	
+
 	public static final String FLICKR_TAG = "flickr:";
-	
-	private static final String API_KEY = "969d5e7ab95e1de4299f5f81faf04d1d";
-	private static final String SECRET_KEY = "17710a5df2551049";
-	
+
+	private static final String API_KEY = "d4bf12853acf7d918840397349238f4f";
+	private static final String SECRET_KEY = "ff516e48024cdb3d";
+
 	private static FlickrGetter instance;
-	
-	private PhotosInterface searcher;
-	
+
+	private Flickr flickr;
+
+	private String frob;
+	private String token;
+
 	private FlickrGetter()
 	{
-		Flickr flickr = new Flickr(API_KEY);
+		flickr = new Flickr(API_KEY);
 		flickr.setSharedSecret(SECRET_KEY);
-		this.searcher = flickr.getPhotosInterface();
+		this.frob = null;
+		this.token = null;
 	}
-	
-	public static FlickrGetter getInstance()
+
+	public synchronized static FlickrGetter getInstance()
 	{
 		if (instance == null)
 		{
 			instance = new FlickrGetter();
 		}
 		return instance;
+	}
+
+	private boolean isConnected()
+	{
+		boolean result = false;
+		
+		try {
+			flickr.getAuthInterface().checkToken(token);
+			result = true;
+		} catch (IOException e) {
+			LOGGER.error("Error while checking connection", e);
+		} catch (SAXException e) {
+			LOGGER.error("Error while checking connection", e);
+		} catch (FlickrException e) {
+			result = false;
+		}
+
+		return result;
+	}
+
+	public void askForConnection(Wavelet wavelet)
+	{
+		if (!isConnected())
+		{
+			try {
+				AuthInterface ai = flickr.getAuthInterface();
+				frob = ai.getFrob();
+				URL url = ai.buildAuthenticationUrl(Permission.READ, frob);
+				Blip blip = wavelet.appendBlip();
+				blip.getDocument().append("Connectez-moi : " + url.toString());
+			} catch (MalformedURLException e) {
+				LOGGER.error("Error while sending auth URL", e);
+			} catch (IOException e) {
+				LOGGER.error("Error while sending auth URL", e);
+			} catch (SAXException e) {
+				LOGGER.error("Error while sending auth URL", e);
+			} catch (FlickrException e) {
+				LOGGER.error("Error while sending auth URL", e);
+			}
+		}
+	}
+
+	private void auth(Wavelet wavelet)
+	{
+		try {
+			// On vérifie
+			if (token != null)
+			{
+				// On vérifie si on est toujours auth
+				try {
+					flickr.getAuthInterface().checkToken(token);
+				} catch (FlickrException e) {
+					token = null;
+					askForConnection(wavelet);
+				}
+			}
+			else if (frob != null)
+			{
+				try {
+					// On refait l'auth
+					Auth token = flickr.getAuthInterface().getToken(frob);
+					flickr.setAuth(token);
+					this.token = token.getToken();
+					flickr.getAuthInterface().checkToken(this.token);
+				} catch (FlickrException e) {
+					token = null;
+					askForConnection(wavelet);
+				}
+			}
+			else
+			{
+				askForConnection(wavelet);
+			}
+		} catch (IOException e) {
+			LOGGER.error("Error while authenticating", e);
+		} catch (SAXException e) {
+			LOGGER.error("Error while authenticating", e);
+		}
 	}
 
 	@Override
@@ -60,10 +146,12 @@ public class FlickrGetter extends BlipParser {
 				} catch (NumberFormatException e) {
 					// Nothing
 				}
+				auth(currentWavelet);
 				SearchParameters sp = new SearchParameters();
 				sp.setTags(new String[] {params[1]});
 				sp.setSort(SearchParameters.INTERESTINGNESS_DESC);
-				PhotoList list = this.searcher.search(sp, results, 0);
+				sp.setSafeSearch(Flickr.SAFETYLEVEL_MODERATE);
+				PhotoList list = this.flickr.getPhotosInterface().search(sp, results, 0);
 				Blip blip = currentWavelet.appendBlip();
 				for (Object o : list)
 				{
