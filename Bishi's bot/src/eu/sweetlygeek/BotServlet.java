@@ -15,6 +15,7 @@ import com.google.wave.api.Wavelet;
 
 import eu.sweetlygeek.parsers.DropularGetter;
 import eu.sweetlygeek.parsers.FlickrGetter;
+import eu.sweetlygeek.parsers.TumblrGetter;
 
 /** Global bot servlet
  * @author bishiboosh
@@ -57,6 +58,16 @@ public class BotServlet extends AbstractRobotServlet {
 			else if (StringUtils.contains(text, FlickrGetter.FLICKR_TAG))
 			{
 				FlickrGetter.getInstance().analyzeBlip(blip, wavelet);
+			}
+			else if (StringUtils.contains(text, TumblrGetter.TUMBLR_TAG))
+			{
+				try {
+					TumblrGetter.getInstance().analyzeBlip(blip, wavelet);
+				} catch (ParserConfigurationException ex) {
+					LOGGER.error("Error while analyzing blip", ex);
+				} catch (SAXException ex) {
+					LOGGER.error("Error while analyzing blip", ex);
+				}
 			}
 		}
 	}
