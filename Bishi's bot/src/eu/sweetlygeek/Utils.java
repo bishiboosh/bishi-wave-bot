@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /** Utils
  * @author bishiboosh
@@ -42,6 +43,16 @@ public class Utils {
 			
 			return result;
 		}
+	}
+	
+	public static <T, U> Map<T, U> copyMapsFromKey(Map<T, U> from, Set<T> keys)
+	{
+		Map<T, U> result = new HashMap<T, U>();
+		for (T key : keys)
+		{
+			result.put(key, from.get(key));
+		}
+		return result;
 	}
 
 }

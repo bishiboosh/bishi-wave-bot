@@ -1,6 +1,9 @@
 package eu.sweetlygeek.parsers;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -8,20 +11,23 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;
 
-import eu.sweetlygeek.handlers.TumblrHandler;
+import eu.sweetlygeek.Utils;
 
 public class TumblrGetter extends BlipParser {
 	
@@ -29,18 +35,15 @@ public class TumblrGetter extends BlipParser {
 	
 	public static final String TUMBLR_TAG = "tumblr:";
 	
-	private static final String TUMBLR_URL = "http://romv.tumblr.com/api/read";
+	private static final String TUMBLR_URL = "http://romv.tumblr.com/api/read/json";
 	
 	private static TumblrGetter instance;
 	private URLFetchService fetcher;
-	private SAXParser parser;
 	private URLCodec codec;
 	
 	private TumblrGetter() throws ParserConfigurationException, SAXException
 	{
 		this.fetcher = URLFetchServiceFactory.getURLFetchService();
-		SAXParserFactory spf = SAXParserFactory.newInstance();
-		this.parser = spf.newSAXParser();
 		this.codec = new URLCodec();
 	}
 	
@@ -94,14 +97,67 @@ public class TumblrGetter extends BlipParser {
 				LOGGER.error("Error while analyzing request", e);
 			} catch (IOException e) {
 				LOGGER.error("Error while analyzing request", e);
-			} catch (SAXException e) {
+			} catch (JSONException e) {
 				LOGGER.error("Error while analyzing request", e);
 			}
 		}
 	}
 	
-	private void parseResponse(byte[] content, int results, Wavelet wavelet) throws SAXException, IOException {
-		parseXMLResponse(content, wavelet, parser, new TumblrHandler(results));		
+	private void parseResponse(byte[] content, int results, Wavelet wavelet) throws IOException, JSONException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content)));
+		String result = br.readLine();
+		if (result != null)
+		{
+			Map<String, String> bigMap = new HashMap<String, String>();
+			Map<String, String> miniMap = new HashMap<String, String>();
+			
+			int d = result.indexOf('{');
+			int f = result.lastIndexOf('}') + 1;
+			String sJson = result.substring(d, f);
+			JSONObject tumblr = new JSONObject(sJson);
+			JSONArray posts = tumblr.getJSONArray("posts");
+			for (int i = 0; i < posts.length(); i++)
+			{
+				JSONObject post = posts.getJSONObject(i);
+				parsePost(post, bigMap, miniMap);
+			}
+			
+			bigMap = Utils.pickAtRandom(bigMap, results);
+			miniMap = Utils.copyMapsFromKey(miniMap, bigMap.keySet());
+			
+			Blip blip = wavelet.appendBlip();
+			for (String key : bigMap.keySet())
+			{
+				addImage(blip, miniMap.get(key), bigMap.get(key));
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void parsePost(JSONObject post, Map<String, String> bigMap,
+			Map<String, String> miniMap) throws JSONException {
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		String id = post.getString("id");
+		Iterator<String> keys = post.keys();
+		while (keys.hasNext())
+		{
+			String key = keys.next();
+			if (StringUtils.contains(key, "photo-url"))
+			{
+				int size = Integer.parseInt(key.split("-")[2]);
+				if (size < min)
+				{
+					miniMap.put(id, post.getString(key));
+					min = size;
+				}
+				if (size > max)
+				{
+					bigMap.put(id, post.getString(key));
+					max = size;
+				}
+			}
+		}
 	}
 
 	private URL getURLWithParams(Map<String, String> params) throws MalformedURLException
