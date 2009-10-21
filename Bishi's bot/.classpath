@@ -15,6 +15,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/xalan.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/xerces.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/flickrapi-1.2.jar" sourcepath="/home/bishiboosh/.m2/repository/com/aetrion/flickr/flickrapi/1.1/flickrapi-1.1-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/flickrapi-1.2.jar" sourcepath="C:/Documents and Settings/vrocher/.m2/repository/com/aetrion/flickr/flickrapi/1.1/flickrapi-1.1-sources.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
