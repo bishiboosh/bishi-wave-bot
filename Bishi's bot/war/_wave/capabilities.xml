@@ -4,4 +4,5 @@
     <w:capability name="BLIP_SUBMITTED" content="true" />
   </w:capabilities>
   <w:version>1</w:version>
+  <w:profile name="Bishi's bot" imageurl="http://bishibot.appspot.com/boobs.png" profileurl="http://code.google.com/p/bishi-wave-bot/"/>
 </w:robot>
