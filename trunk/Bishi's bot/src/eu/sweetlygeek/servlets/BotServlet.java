@@ -1,4 +1,4 @@
-package eu.sweetlygeek;
+package eu.sweetlygeek.servlets;
 
 import javax.xml.parsers.ParserConfigurationException;
 
