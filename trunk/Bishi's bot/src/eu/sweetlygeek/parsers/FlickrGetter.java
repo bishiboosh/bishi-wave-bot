@@ -32,15 +32,17 @@ public class FlickrGetter extends BlipParser {
 	private Flickr flickr;
 
 	private String frob;
-	private boolean authentified;
+	private String token;
 
 	private FlickrGetter()
 	{
 		flickr = new Flickr(API_KEY);
 		flickr.setSharedSecret(SECRET_KEY);
+		this.frob = null;
+		this.token = null;
 	}
 
-	public static FlickrGetter getInstance()
+	public synchronized static FlickrGetter getInstance()
 	{
 		if (instance == null)
 		{
@@ -49,53 +51,81 @@ public class FlickrGetter extends BlipParser {
 		return instance;
 	}
 
-	public void auth(Wavelet wavelet)
+	private boolean isConnected()
 	{
+		boolean result = false;
+		
 		try {
-			AuthInterface ai = flickr.getAuthInterface();
-			frob = ai.getFrob();
-			URL url = ai.buildAuthenticationUrl(Permission.READ, frob);
-			Blip blip = wavelet.appendBlip();
-			blip.getDocument().append("Connectez-moi : " + url.toString());
-		} catch (MalformedURLException e) {
-			LOGGER.error("Error while sending auth URL", e);
+			flickr.getAuthInterface().checkToken(token);
+			result = true;
 		} catch (IOException e) {
-			LOGGER.error("Error while sending auth URL", e);
+			LOGGER.error("Error while checking connection", e);
 		} catch (SAXException e) {
-			LOGGER.error("Error while sending auth URL", e);
+			LOGGER.error("Error while checking connection", e);
 		} catch (FlickrException e) {
-			LOGGER.error("Error while sending auth URL", e);
+			result = false;
 		}
-	}
-	
-	public void deauth()
-	{
-		frob = null;
-		authentified = false;
+
+		return result;
 	}
 
-	private void reAuth(Wavelet wavelet)
+	public void askForConnection(Wavelet wavelet)
 	{
-		if (frob != null)
+		if (!isConnected())
 		{
 			try {
 				AuthInterface ai = flickr.getAuthInterface();
-				Auth token = ai.getToken(frob);
-				flickr.setAuth(token);
-				authentified = true;
+				frob = ai.getFrob();
+				URL url = ai.buildAuthenticationUrl(Permission.READ, frob);
+				Blip blip = wavelet.appendBlip();
+				blip.getDocument().append("Connectez-moi : " + url.toString());
+			} catch (MalformedURLException e) {
+				LOGGER.error("Error while sending auth URL", e);
 			} catch (IOException e) {
-				LOGGER.error("Error while re-authentificating", e);
+				LOGGER.error("Error while sending auth URL", e);
 			} catch (SAXException e) {
-				LOGGER.error("Error while re-authentificating", e);
+				LOGGER.error("Error while sending auth URL", e);
 			} catch (FlickrException e) {
-				authentified = false;
-				auth(wavelet);
+				LOGGER.error("Error while sending auth URL", e);
 			}
 		}
-		else
-		{
-			authentified = false;
-			auth(wavelet);
+	}
+
+	private void auth(Wavelet wavelet)
+	{
+		try {
+			// On vérifie
+			if (token != null)
+			{
+				// On vérifie si on est toujours auth
+				try {
+					flickr.getAuthInterface().checkToken(token);
+				} catch (FlickrException e) {
+					token = null;
+					askForConnection(wavelet);
+				}
+			}
+			else if (frob != null)
+			{
+				try {
+					// On refait l'auth
+					Auth token = flickr.getAuthInterface().getToken(frob);
+					flickr.setAuth(token);
+					this.token = token.getToken();
+					flickr.getAuthInterface().checkToken(this.token);
+				} catch (FlickrException e) {
+					token = null;
+					askForConnection(wavelet);
+				}
+			}
+			else
+			{
+				askForConnection(wavelet);
+			}
+		} catch (IOException e) {
+			LOGGER.error("Error while authenticating", e);
+		} catch (SAXException e) {
+			LOGGER.error("Error while authenticating", e);
 		}
 	}
 
@@ -116,14 +146,11 @@ public class FlickrGetter extends BlipParser {
 				} catch (NumberFormatException e) {
 					// Nothing
 				}
-				reAuth(currentWavelet);
+				auth(currentWavelet);
 				SearchParameters sp = new SearchParameters();
 				sp.setTags(new String[] {params[1]});
 				sp.setSort(SearchParameters.INTERESTINGNESS_DESC);
-				if (authentified)
-				{
-					sp.setSafeSearch(Flickr.SAFETYLEVEL_RESTRICTED);
-				}
+				sp.setSafeSearch(Flickr.SAFETYLEVEL_RESTRICTED);
 				PhotoList list = this.flickr.getPhotosInterface().search(sp, results, 0);
 				Blip blip = currentWavelet.appendBlip();
 				for (Object o : list)

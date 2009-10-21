@@ -49,7 +49,7 @@ public class DropularGetter extends BlipParser {
 		this.parser = spf.newSAXParser();
 	}
 
-	public static DropularGetter getInstance() throws ParserConfigurationException, SAXException
+	public synchronized static DropularGetter getInstance() throws ParserConfigurationException, SAXException
 	{
 		if (instance == null)
 		{
