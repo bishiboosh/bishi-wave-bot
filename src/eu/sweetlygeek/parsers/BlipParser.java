@@ -10,6 +10,8 @@ import com.google.wave.api.Blip;
 import com.google.wave.api.Image;
 import com.google.wave.api.TextView;
 import com.google.wave.api.Wavelet;
+import com.sun.corba.se.spi.ior.iiop.AlternateIIOPAddressComponent;
+import com.sun.xml.internal.fastinfoset.sax.Properties;
 
 /** Interface for all blip parsers
  * @author bishiboosh
@@ -23,9 +25,13 @@ public abstract class BlipParser {
 	{
 		TextView doc = blip.getDocument();
 		Image image = new Image();
+		image.setAttachmentId("http://www.google.fr/intl/fr_fr/images/logo.gif");
 		image.setUrl(littleUrl);
-//		String img = doc.appendElement(image);
-		doc.appendMarkup("<a href='" + bigUrl + "'><img src='" + littleUrl + "' /></a>");
+		image.setCaption("test");
+		image.setProperty("alt", littleUrl);
+		doc.appendElement(image);
+		doc.appendMarkup("test : " + image);
+//		doc.appendMarkup("<a href='" + bigUrl + "'><img src='" + littleUrl + "' /></a>");
 	}
 	
 	protected abstract void analyzeRequest(String request, Wavelet currentWavelet);
