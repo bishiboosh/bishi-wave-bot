@@ -37,7 +37,6 @@ public class BotServlet extends AbstractRobotServlet {
 			Blip blip = wavelet.appendBlip();
 			TextView tv = blip.getDocument();
 			tv.append("Salut les moches !");
-			FlickrGetter.getInstance().askForConnection(wavelet);
 		}
 		
 		for (Event e : bundle.getBlipSubmittedEvents())
