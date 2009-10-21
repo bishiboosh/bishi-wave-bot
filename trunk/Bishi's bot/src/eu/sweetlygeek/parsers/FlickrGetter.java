@@ -94,10 +94,10 @@ public class FlickrGetter extends BlipParser {
 	private void auth(Wavelet wavelet)
 	{
 		try {
-			// On vérifie
+			// On vï¿½rifie
 			if (token != null)
 			{
-				// On vérifie si on est toujours auth
+				// On vï¿½rifie si on est toujours auth
 				try {
 					flickr.getAuthInterface().checkToken(token);
 				} catch (FlickrException e) {
@@ -127,11 +127,6 @@ public class FlickrGetter extends BlipParser {
 		} catch (SAXException e) {
 			LOGGER.error("Error while authenticating", e);
 		}
-	}
-
-	@Override
-	public void analyzeBlip(Blip blip, Wavelet currentWavelet) {
-		analyzeBlip(blip, currentWavelet, FLICKR_TAG);
 	}
 
 	@Override
@@ -166,6 +161,11 @@ public class FlickrGetter extends BlipParser {
 		} catch (FlickrException e) {
 			LOGGER.error("Error while analyzing request", e);
 		}		
+	}
+
+	@Override
+	protected String getTag() {
+		return FLICKR_TAG;
 	}
 
 }
