@@ -114,7 +114,7 @@ public class TumblrGetter extends BlipParser {
 		Map<String, String> miniMap = handler.getMiniMap();
 		for (String dropId : bigMap.keySet())
 		{
-			addImage(blip, miniMap.get(dropId), bigMap.get(dropId));
+			addImage(blip, miniMap.get(dropId), bigMap.get(dropId), null);
 		}
 	}
 }
