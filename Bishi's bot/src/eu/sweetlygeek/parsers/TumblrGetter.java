@@ -37,25 +37,15 @@ public class TumblrGetter extends BlipParser {
 	
 	private static final String TUMBLR_URL = "http://romv.tumblr.com/api/read/json";
 	
-	private static TumblrGetter instance;
 	private URLFetchService fetcher;
 	private URLCodec codec;
 	
-	private TumblrGetter() throws ParserConfigurationException, SAXException
+	public TumblrGetter() throws ParserConfigurationException, SAXException
 	{
 		this.fetcher = URLFetchServiceFactory.getURLFetchService();
 		this.codec = new URLCodec();
 	}
 	
-	public static synchronized TumblrGetter getInstance() throws ParserConfigurationException, SAXException
-	{
-		if (instance == null)
-		{
-			instance = new TumblrGetter();
-		}
-		return instance;
-	}
-
 	@Override
 	protected void analyzeRequest(String request, Wavelet currentWavelet) {
 		String[] params = request.split(":");

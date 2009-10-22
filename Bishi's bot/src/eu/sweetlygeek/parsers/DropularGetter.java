@@ -30,24 +30,14 @@ public class DropularGetter extends BlipParser {
 
 	public static final String DROPULAR_URL = "http://dropular.net/api/";
 
-	private static DropularGetter instance;
 	private URLFetchService fetcher;
 	private SAXParser parser;
 
-	private DropularGetter() throws SAXException, ParserConfigurationException
+	public DropularGetter() throws SAXException, ParserConfigurationException
 	{
 		this.fetcher = URLFetchServiceFactory.getURLFetchService();
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		this.parser = spf.newSAXParser();
-	}
-
-	public synchronized static DropularGetter getInstance() throws ParserConfigurationException, SAXException
-	{
-		if (instance == null)
-		{
-			instance = new DropularGetter();
-		}
-		return instance;
 	}
 
 	protected void analyzeRequest(String request, Wavelet currentWavelet)

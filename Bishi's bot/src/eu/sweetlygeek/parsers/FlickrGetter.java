@@ -27,28 +27,17 @@ public class FlickrGetter extends BlipParser {
 	private static final String API_KEY = "969d5e7ab95e1de4299f5f81faf04d1d";
 	private static final String SECRET_KEY = "17710a5df2551049";
 
-	private static FlickrGetter instance;
-
 	private Flickr flickr;
 
 	private String frob;
 	private String token;
 
-	private FlickrGetter()
+	public FlickrGetter()
 	{
 		flickr = new Flickr(API_KEY);
 		flickr.setSharedSecret(SECRET_KEY);
 		this.frob = null;
 		this.token = null;
-	}
-
-	public synchronized static FlickrGetter getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new FlickrGetter();
-		}
-		return instance;
 	}
 
 	private boolean isConnected()
