@@ -1,4 +1,4 @@
-package eu.sweetlygeek;
+package eu.sweetlygeek.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,8 @@ import java.util.Set;
  *
  */
 public class Utils {
+
+	public static final String BOT_ID = "bishibot@appspot.com";
 
 	private static final Random random = new Random();
 
@@ -32,7 +34,7 @@ public class Utils {
 		else
 		{
 			Map<T, U> result = new HashMap<T, U>();
-			
+
 			List<T> keys = new ArrayList<T>(map.keySet());
 			while (result.size() < nb)
 			{
@@ -40,11 +42,11 @@ public class Utils {
 				T key = keys.get(choice);
 				result.put(key, map.get(key));
 			}
-			
+
 			return result;
 		}
 	}
-	
+
 	public static <T, U> Map<T, U> copyMapsFromKey(Map<T, U> from, Set<T> keys)
 	{
 		Map<T, U> result = new HashMap<T, U>();

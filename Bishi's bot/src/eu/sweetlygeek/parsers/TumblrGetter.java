@@ -27,7 +27,7 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;
 
-import eu.sweetlygeek.Utils;
+import eu.sweetlygeek.utils.Utils;
 
 public class TumblrGetter extends BlipParser {
 	
@@ -94,7 +94,7 @@ public class TumblrGetter extends BlipParser {
 				paramMap.put("start", "50");
 				URL url2 = getURLWithParams(paramMap);
 				HTTPResponse res2 = this.fetcher.fetch(url2);
-				if (res != null)
+				if (res != null && res2 != null)
 				{
 					parseResponse(res.getContent(), res2.getContent(), results, currentWavelet);
 				}
