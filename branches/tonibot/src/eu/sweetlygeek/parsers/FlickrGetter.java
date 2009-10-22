@@ -68,7 +68,7 @@ public class FlickrGetter extends BlipParser {
 				for (Object o : list)
 				{
 					Photo p = (Photo) o;
-					addImage(blip, p.getSmallUrl(), p.getUrl());
+					addImage(blip, p.getSmallUrl(), p.getUrl(), p.getTitle());
 				}
 			}
 		} catch (IOException e) {
