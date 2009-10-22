@@ -43,6 +43,7 @@ public abstract class BlipParser {
 		image.setUrl(littleUrl);
 		doc.appendElement(image);
 		doc.appendMarkup("<a href='" + bigUrl + "'>" + bigUrl + "</a>");
+		doc.append("\n");
 	}
 	
 	protected abstract void analyzeRequest(String request, Wavelet currentWavelet);

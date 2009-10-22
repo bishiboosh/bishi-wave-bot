@@ -90,7 +90,7 @@ public class TumblrGetter extends BlipParser {
 				URL url = getURLWithParams(paramMap);
 				HTTPResponse res = this.fetcher.fetch(url);
 				// On cherche sur les 100 premiers donc on refait deux fois
-				// la requête
+				// la requete
 				paramMap.put("start", "50");
 				URL url2 = getURLWithParams(paramMap);
 				HTTPResponse res2 = this.fetcher.fetch(url2);
@@ -144,7 +144,6 @@ public class TumblrGetter extends BlipParser {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void parsePost(JSONObject post, Map<String, String> bigMap,
 			Map<String, String> miniMap) throws JSONException {
 		int min = Integer.MAX_VALUE;
