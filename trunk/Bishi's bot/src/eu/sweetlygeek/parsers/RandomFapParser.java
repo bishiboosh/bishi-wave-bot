@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -52,6 +53,7 @@ public class RandomFapParser extends BlipParser {
 		this.xpath = new DOMXPath(XPATH_EXP);
 		TransformerFactory tf = TransformerFactory.newInstance();
 		this.transformer = tf.newTransformer();
+		this.transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 	};
 	
 	@Override
