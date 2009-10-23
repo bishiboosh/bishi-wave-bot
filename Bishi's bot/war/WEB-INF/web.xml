@@ -12,4 +12,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>BotServlet</servlet-name>
 		<url-pattern>/_wave/robot/jsonrpc</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>RandomFapServlet</servlet-name>
+		<servlet-class>eu.sweetlygeek.servlets.RandomFapServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RandomFapServlet</servlet-name>
+		<url-pattern>/fap/robot.xml</url-pattern>
+	</servlet-mapping>
 </web-app>
