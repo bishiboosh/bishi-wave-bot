@@ -2,7 +2,6 @@ package eu.sweetlygeek.servlets;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -14,15 +13,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.jaxen.JaxenException;
@@ -85,6 +79,8 @@ public class RandomFapServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
+			resp.setContentType("application/xml");
+			
 			HTTPResponse res = fetcher.fetch(new URL(FAP_URL));
 			if (res != null)
 			{
@@ -93,11 +89,6 @@ public class RandomFapServlet extends HttpServlet {
 				
 				Node toEmbedNode = (Node) xpath.selectNodes(fapDoc).get(0);
 				
-				Source source = new DOMSource(toEmbedNode);
-				StringWriter sw = new StringWriter();
-				Result result = new StreamResult(sw);
-				transformer.transform(source, result);
-				
 				// TODO : output du xml
 			}
 		} catch (MalformedURLException e) {
@@ -105,8 +96,6 @@ public class RandomFapServlet extends HttpServlet {
 		} catch (JaxenException e) {
 			LOGGER.error("Error while analyzing request", e);
 		} catch (IOException e) {
-			LOGGER.error("Error while analyzing request", e);
-		} catch (TransformerException e) {
 			LOGGER.error("Error while analyzing request", e);
 		}
 	}
