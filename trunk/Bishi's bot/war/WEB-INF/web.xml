@@ -19,6 +19,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>RandomFapServlet</servlet-name>
-		<url-pattern>/fap/robot.xml</url-pattern>
+		<url-pattern>/_wave/robot/fap.xml</url-pattern>
 	</servlet-mapping>
 </web-app>

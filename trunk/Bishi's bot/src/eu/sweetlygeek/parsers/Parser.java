@@ -11,7 +11,7 @@ public enum Parser {
 	dropular (DropularGetter.class),
 	tumblr (TumblrGetter.class),
 	flickr (FlickrGetter.class),
-	randomFap (RandomFapParser.class);
+	randomFap (RandomFap.class);
 	
 	private BlipParser parser;
 	
