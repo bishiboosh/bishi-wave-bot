@@ -134,6 +134,7 @@ public class TumblrGetter extends BlipParser {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parsePost(JSONObject post, Map<String, String> bigMap,
 			Map<String, String> miniMap) throws JSONException {
 		int min = Integer.MAX_VALUE;
