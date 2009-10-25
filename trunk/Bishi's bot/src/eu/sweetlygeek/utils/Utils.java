@@ -1,11 +1,27 @@
 package eu.sweetlygeek.utils;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Node;
 
 /** Utils
  * @author bishiboosh
@@ -16,6 +32,15 @@ public class Utils {
 	public static final String BOT_ID = "bishibot@appspot.com";
 
 	private static final Random random = new Random();
+	
+	private static PersistenceManager persistenceManager;
+	private static Utils instance;
+	
+	private Utils()
+	{
+		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
+		persistenceManager = pmf.getPersistenceManager(); 
+	}
 
 	/** Return random values from a value
 	 * @param <T> key type
@@ -56,5 +81,29 @@ public class Utils {
 		}
 		return result;
 	}
-
+	
+	public static String DOMToString(Node node, boolean withXMLDeclaration) throws TransformerFactoryConfigurationError, TransformerException
+	{
+		Transformer t = TransformerFactory.newInstance().newTransformer();
+		t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, withXMLDeclaration ? "no" : "yes");
+		StringWriter sw = new StringWriter();
+		Source s = new DOMSource(node);
+		Result r = new StreamResult(sw);
+		t.transform(s, r);
+		return sw.toString();
+	}
+	
+	public PersistenceManager getPersistenceManager()
+	{
+		return persistenceManager;
+	}
+	
+	public synchronized static Utils getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new Utils();
+		}
+		return instance;
+	}
 }
