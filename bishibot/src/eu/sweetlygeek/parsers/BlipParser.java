@@ -31,11 +31,20 @@ public abstract class BlipParser {
 	
 	protected abstract String getTag();
 	
+	/** Analyze given blip
+	 * @param blip
+	 * @param currentWavelet
+	 */
 	public void analyzeBlip(Blip blip, Wavelet currentWavelet)
 	{
 		analyzeBlip(blip, currentWavelet, getTag());
 	}
 	
+	/** Add an image to a blip
+	 * @param blip
+	 * @param littleUrl miniature url
+	 * @param bigUrl real size url
+	 */
 	protected void addImage(Blip blip, String littleUrl, String bigUrl)
 	{
 		TextView doc = blip.getDocument();
@@ -46,8 +55,18 @@ public abstract class BlipParser {
 		doc.append("\n");
 	}
 	
+	/** Analyze the string given by an user
+	 * @param request
+	 * @param currentWavelet
+	 */
 	protected abstract void analyzeRequest(String request, Wavelet currentWavelet);
 	
+	/** Analyze a blip against a tag. Cut the blip in words, and processes each
+	 * of the instructions
+	 * @param blip
+	 * @param wavelet
+	 * @param tag
+	 */
 	protected void analyzeBlip(Blip blip, Wavelet wavelet, String tag)
 	{
 		String text = blip.getDocument().getText();
@@ -75,6 +94,14 @@ public abstract class BlipParser {
 		}
 	}
 	
+	/** Parse an XML file and add its content
+	 * @param content xml file
+	 * @param wavelet
+	 * @param parser
+	 * @param handler handler which provides big and little image url
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	protected void parseXMLResponse(byte[] content, Wavelet wavelet, SAXParser parser, ImageHandler handler) throws SAXException, IOException {
 		StringBuffer xmlBuf = new StringBuffer();
 		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content)));

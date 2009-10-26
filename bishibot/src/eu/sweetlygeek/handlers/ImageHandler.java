@@ -29,6 +29,9 @@ public abstract class ImageHandler extends DefaultHandler {
 		this.inTextTag = false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
+	 */
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {

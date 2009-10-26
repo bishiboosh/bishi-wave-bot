@@ -8,6 +8,10 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Text;
 
+/** Persistent object stocking urls and generated xmls
+ * @author bishiboosh
+ *
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GeneratedResponse {
 	

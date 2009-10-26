@@ -29,6 +29,10 @@ import com.google.wave.api.Wavelet;
 
 import eu.sweetlygeek.utils.Utils;
 
+/** Parser for Romu tumblr
+ * @author bishiboosh
+ *
+ */
 public class TumblrGetter extends BlipParser {
 	
 	private static final Logger LOGGER = Logger.getLogger(TumblrGetter.class);
@@ -46,6 +50,9 @@ public class TumblrGetter extends BlipParser {
 		this.codec = new URLCodec();
 	}
 	
+	/* (non-Javadoc)
+	 * @see eu.sweetlygeek.parsers.BlipParser#analyzeRequest(java.lang.String, com.google.wave.api.Wavelet)
+	 */
 	@Override
 	protected void analyzeRequest(String request, Wavelet currentWavelet) {
 		String[] params = request.split(":");

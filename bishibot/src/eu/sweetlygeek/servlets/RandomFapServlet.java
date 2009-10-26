@@ -35,6 +35,11 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import eu.sweetlygeek.persistent.GeneratedResponse;
 import eu.sweetlygeek.utils.Utils;
 
+/** This servlets gets a video from http://randomfap.com and generates a gadget xml out of it
+ * Each generated xml is stocked in base.
+ * @author bishiboosh
+ *
+ */
 @SuppressWarnings("serial")
 public class RandomFapServlet extends HttpServlet {
 	
@@ -51,6 +56,9 @@ public class RandomFapServlet extends HttpServlet {
 	private DocumentBuilder builder;
 	private PersistenceManager responseManager;
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.GenericServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -78,6 +86,9 @@ public class RandomFapServlet extends HttpServlet {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
