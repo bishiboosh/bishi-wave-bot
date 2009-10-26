@@ -53,7 +53,6 @@ public class RandomFap extends BlipParser {
 		return FAP_TAG;
 	}
 
-	@SuppressWarnings("unchecked")
 	private boolean urlExists(String xmlName)
 	{
 		String url = URL_NAME + xmlName + ".xml";
