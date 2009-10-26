@@ -98,7 +98,6 @@ public class RandomFapServlet extends HttpServlet {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private String getOrGenerate(String requestURL) throws JaxenException, IOException, TransformerFactoryConfigurationError, TransformerException
 	{
 		Query query = responseManager.newQuery(QUERY_URL);
