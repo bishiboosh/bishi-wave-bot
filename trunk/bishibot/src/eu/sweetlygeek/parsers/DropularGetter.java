@@ -40,6 +40,9 @@ public class DropularGetter extends BlipParser {
 		this.parser = spf.newSAXParser();
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.sweetlygeek.parsers.BlipParser#analyzeRequest(java.lang.String, com.google.wave.api.Wavelet)
+	 */
 	protected void analyzeRequest(String request, Wavelet currentWavelet)
 	{
 		try {

@@ -6,6 +6,10 @@ import org.apache.log4j.Logger;
 import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;
 
+/** Enumeration containing all parsers
+ * @author bishiboosh
+ *
+ */
 public enum Parser {
 	
 	dropular (DropularGetter.class),
@@ -28,6 +32,10 @@ public enum Parser {
 		}
 	}
 	
+	/** Launch the analysis of this blip in this parser
+	 * @param blip
+	 * @param currentWavelet
+	 */
 	public void analyzeBlip(Blip blip, Wavelet currentWavelet)
 	{
 		String text = blip.getDocument().getText();

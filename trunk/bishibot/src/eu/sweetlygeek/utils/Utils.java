@@ -23,7 +23,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Node;
 
-/** Utils
+/** Global utils
  * @author bishiboosh
  *
  */
@@ -72,6 +72,13 @@ public class Utils {
 		}
 	}
 
+	/** Copy some keys and their value from a map to another
+	 * @param <T>
+	 * @param <U>
+	 * @param from
+	 * @param keys
+	 * @return
+	 */
 	public static <T, U> Map<T, U> copyMapsFromKey(Map<T, U> from, Set<T> keys)
 	{
 		Map<T, U> result = new HashMap<T, U>();
@@ -82,6 +89,13 @@ public class Utils {
 		return result;
 	}
 	
+	/** Transform a DOM node to a string
+	 * @param node
+	 * @param withXMLDeclaration
+	 * @return
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerException
+	 */
 	public static String DOMToString(Node node, boolean withXMLDeclaration) throws TransformerFactoryConfigurationError, TransformerException
 	{
 		Transformer t = TransformerFactory.newInstance().newTransformer();

@@ -18,6 +18,10 @@ import com.aetrion.flickr.photos.SearchParameters;
 import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;
 
+/** Getter for flickr
+ * @author bishiboosh
+ *
+ */
 public class FlickrGetter extends BlipParser {
 
 	private static final Logger LOGGER = Logger.getLogger(FlickrGetter.class);
@@ -58,6 +62,9 @@ public class FlickrGetter extends BlipParser {
 		return result;
 	}
 
+	/** Add a new message to the wavelet asking the user to connect
+	 * @param wavelet
+	 */
 	public void askForConnection(Wavelet wavelet)
 	{
 		if (!isConnected())
@@ -118,6 +125,9 @@ public class FlickrGetter extends BlipParser {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.sweetlygeek.parsers.BlipParser#analyzeRequest(java.lang.String, com.google.wave.api.Wavelet)
+	 */
 	@Override
 	protected void analyzeRequest(String request, Wavelet currentWavelet) {
 		try {

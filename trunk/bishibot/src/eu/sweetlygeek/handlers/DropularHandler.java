@@ -21,6 +21,9 @@ public class DropularHandler extends ImageHandler {
 		this.inTextTag = false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
 	@Override
 	public void startElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
@@ -36,6 +39,9 @@ public class DropularHandler extends ImageHandler {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
