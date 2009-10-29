@@ -38,9 +38,9 @@ public class BotServlet extends AbstractRobotServlet {
 		{
 			Blip blip = e.getBlip();
 			Parser[] parsers = Parser.values();
-			for (int i = 0; i < parsers.length; i++)
+			for (Parser parser : parsers)
 			{
-				parsers[i].analyzeBlip(blip, wavelet);
+				parser.analyzeBlip(blip, wavelet);
 			}
 		}
 	}
