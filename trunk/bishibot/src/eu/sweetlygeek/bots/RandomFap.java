@@ -1,4 +1,4 @@
-package eu.sweetlygeek.parsers;
+package eu.sweetlygeek.bots;
 
 import java.util.List;
 
@@ -57,10 +57,11 @@ public class RandomFap extends BlipParser {
 	}
 
 	@Override
-	protected String getTag() {
+	public String getTag() {
 		return FAP_TAG;
 	}
 
+	@SuppressWarnings("unchecked")
 	private boolean urlExists(String xmlName)
 	{
 		String url = URL_NAME + xmlName + ".xml";

@@ -1,4 +1,4 @@
-package eu.sweetlygeek.parsers;
+package eu.sweetlygeek.bots;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -78,7 +78,7 @@ public class DropularGetter extends BlipParser {
 	}
 
 	@Override
-	protected String getTag() {
+	public String getTag() {
 		return DROPULAR_TAG;
 	}
 }
