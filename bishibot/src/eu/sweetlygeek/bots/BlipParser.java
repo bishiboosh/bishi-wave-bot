@@ -1,4 +1,4 @@
-package eu.sweetlygeek.parsers;
+package eu.sweetlygeek.bots;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -29,7 +29,7 @@ import eu.sweetlygeek.handlers.ImageHandler;
  */
 public abstract class BlipParser {
 	
-	protected abstract String getTag();
+	public abstract String getTag();
 	
 	/** Analyze given blip
 	 * @param blip

@@ -1,4 +1,4 @@
-package eu.sweetlygeek.parsers;
+package eu.sweetlygeek.bots;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -141,6 +141,7 @@ public class TumblrGetter extends BlipParser {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parsePost(JSONObject post, Map<String, String> bigMap,
 			Map<String, String> miniMap) throws JSONException {
 		int min = Integer.MAX_VALUE;
@@ -192,7 +193,7 @@ public class TumblrGetter extends BlipParser {
 	}
 
 	@Override
-	protected String getTag() {
+	public String getTag() {
 		return TUMBLR_TAG;
 	}
 

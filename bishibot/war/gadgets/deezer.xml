@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+	<ModulePrefs title="Deezer BlackLodge Gadget">
+		<Require feature="dynamic-height" />
+		<Require feature="wave" />
+	</ModulePrefs>
+	<Content type="html"><![CDATA[
+		<script type='text/javascript' src='http://bishibot.appspot.com/_wave/robot/resizer.js'></script>
+		<div style="width:450px;height:345px;">
+			<object width="450" height="345">
+				<param name="movie" value="http://www.deezer.com/embedded/widget_450x345.swf?path=28171150&amp;lang=FR&amp;autoplay=0&amp;autoShuffle=1&amp;id=9574570" ></param>
+				<embed wmode="opaque" src="http://www.deezer.com/embedded/widget_450x345.swf?path=28171150&amp;lang=FR&amp;autoplay=0&amp;autoShuffle=1&amp;id=9574570" type="application/x-shockwave-flash" width="450" height="345" ></embed>
+			</object>
+			<font size='1' color='#000000' face='Arial'>Découvrez <a href='http://www.deezer.com/fr/converge.html'>Converge</a>!</font>
+		</div>
+	]]>
+	</Content>
+</Module>

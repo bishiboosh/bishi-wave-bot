@@ -1,4 +1,4 @@
-package eu.sweetlygeek.parsers;
+package eu.sweetlygeek;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -6,23 +6,31 @@ import org.apache.log4j.Logger;
 import com.google.wave.api.Blip;
 import com.google.wave.api.Wavelet;
 
+import eu.sweetlygeek.bots.BlipParser;
+import eu.sweetlygeek.bots.DeezerBot;
+import eu.sweetlygeek.bots.DropularGetter;
+import eu.sweetlygeek.bots.FlickrGetter;
+import eu.sweetlygeek.bots.RandomFap;
+import eu.sweetlygeek.bots.TumblrGetter;
+
 /** Enumeration containing all parsers
  * @author bishiboosh
  *
  */
-public enum Parser {
+public enum Bots {
 	
 	dropular (DropularGetter.class),
 	tumblr (TumblrGetter.class),
 	flickr (FlickrGetter.class),
-	randomFap (RandomFap.class);
+	randomFap (RandomFap.class),
+	deezer (DeezerBot.class);
 	
 	private BlipParser parser;
 	
 	@SuppressWarnings("unchecked")
-	private Parser(Class clazz)
+	private Bots(Class clazz)
 	{
-		Logger logger = Logger.getLogger(Parser.class);
+		Logger logger = Logger.getLogger(Bots.class);
 		try {
 			this.parser = (BlipParser) clazz.newInstance();
 		} catch (InstantiationException e) {
