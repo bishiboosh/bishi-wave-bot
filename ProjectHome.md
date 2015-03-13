@@ -1,0 +1,1 @@
+A simple wave bot, with functions which will be developped as I learn the functionnalities.
